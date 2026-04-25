@@ -1,0 +1,110 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: santri
+// Fields:
+//   - id: number (timestamp)
+//   - nama: string (1-100 chars)
+//   - nis: string (unique)
+//   - hadir: bool
+//   - status: string (enum: hadir, izin, sakit, alpa, '')
+//   - kelompok: string (Iqra, Quran, Hafidz, Lainnya)
+//   - mood: string (emoji)
+//   - catatan: string
+//   - streak: number
+//   - totalPresent: number
+//   - totalAbsent: number
+//   - skills: map
+//   - progressLogs: list
+//
+// Collection: attendance_logs
+// Fields:
+//   - date: string (ISO 8601 YYYY-MM-DD)
+//   - data: list (array of snapshots)
+//
+// Collection: users
+// Fields:
+//   - uid: string
+//   - email: string
+//   - role: string (enum: teacher, student)
+//   - displayName: string
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher' ||
+         (request.auth.token.email == "advanicplus173@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidSantri(data) {
+      return data.nama is string && data.nama.size() > 0 && data.nama.size() < 100 &&
+             data.nis is string &&
+             data.hadir is bool &&
+             data.status in ['hadir', 'izin', 'sakit', 'alpa', ''] &&
+             data.streak is number &&
+             data.totalPresent is number &&
+             data.totalAbsent is number &&
+             data.skills is map &&
+             data.progressLogs is list;
+    }
+
+    function isValidLog(data) {
+      return data.date is string && data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.data is list;
+    }
+
+    function isValidUser(data) {
+      return data.uid is string &&
+             data.email is string &&
+             data.role in ['teacher', 'student'];
+    }
+
+    // ===============================================================
+    // Matches
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) && isValidUser(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /santri/{santriId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidSantri(request.resource.data);
+      allow update: if isAdmin() && isValidSantri(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /attendance_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && isValidLog(request.resource.data);
+      allow update: if isAdmin() && isValidLog(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

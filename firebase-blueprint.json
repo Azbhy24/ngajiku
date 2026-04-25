@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "Santri": {
+      "title": "Santri",
+      "description": "Data profil dan progres santri",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number", "description": "ID unik santri (timestamp)" },
+        "nama": { "type": "string", "description": "Nama lengkap santri" },
+        "nis": { "type": "string", "description": "Nomor Induk Santri" },
+        "hadir": { "type": "boolean", "description": "Status kehadiran sesi saat ini" },
+        "status": { "type": "string", "description": "Keterangan status (hadir,izin,sakit,alpa)" },
+        "kelompok": { "type": "string", "description": "Kelompok atau level mengaji" },
+        "mood": { "type": "string", "description": "Mood emoji hari ini" },
+        "catatan": { "type": "string", "description": "Catatan tambahan" },
+        "streak": { "type": "number", "description": "Jumlah hari hadir berturut-turut" },
+        "totalPresent": { "type": "number", "description": "Total hari hadir kumulatif" },
+        "totalAbsent": { "type": "number", "description": "Total hari alpa kumulatif" },
+        "skills": { "type": "object", "description": "Data profil kecerdasan santri" },
+        "progressLogs": { "type": "array", "description": "Riwayat mutaba'ah atau progres ngaji" }
+      },
+      "required": ["nama", "nis"]
+    },
+    "AttendanceLog": {
+      "title": "AttendanceLog",
+      "description": "Catatan riwayat absensi harian",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date", "description": "Tanggal sesi" },
+        "data": { "type": "array", "description": "Snapshot data santri saat sesi disimpan" }
+      },
+      "required": ["date", "data"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Profil pengguna sistem",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["teacher", "student"] },
+        "displayName": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/santri/{santriId}": {
+      "schema": "Santri",
+      "description": "Koleksi data santri utama"
+    },
+    "/attendance_logs/{logId}": {
+      "schema": "AttendanceLog",
+      "description": "Koleksi riwayat absensi harian"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Data otorisasi dan profil pengguna"
+    }
+  }
+}
