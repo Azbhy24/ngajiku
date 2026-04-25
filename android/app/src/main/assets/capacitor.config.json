@@ -1,0 +1,8 @@
+{
+	"appId": "com.azbhy.ngajiku",
+	"appName": "NgajiKu",
+	"webDir": "dist",
+	"android": {
+		"allowMixedContent": true
+	}
+}

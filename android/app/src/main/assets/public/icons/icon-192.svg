@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title desc">
+  <title id="title">NgajiKu Icon</title>
+  <desc id="desc">Ikon aplikasi NgajiKu dengan buku terbuka dan bulan sabit.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="44" fill="url(#bg)" />
+  <circle cx="144" cy="48" r="20" fill="#fde68a" opacity="0.95" />
+  <circle cx="152" cy="44" r="16" fill="#0f766e" />
+  <path d="M48 64c15-10 33-15 48-15s33 5 48 15v64c-15-10-33-15-48-15s-33 5-48 15V64z" fill="#ffffff" opacity="0.96"/>
+  <path d="M96 49v64" stroke="#0f766e" stroke-width="6" stroke-linecap="round" />
+  <path d="M58 77c10-6 23-9 38-9" stroke="#99f6e4" stroke-width="6" stroke-linecap="round" />
+  <path d="M58 94c11-6 24-9 38-9" stroke="#99f6e4" stroke-width="6" stroke-linecap="round" />
+  <path d="M104 68c15 0 28 3 38 9" stroke="#99f6e4" stroke-width="6" stroke-linecap="round" />
+  <path d="M104 85c14 0 27 3 38 9" stroke="#99f6e4" stroke-width="6" stroke-linecap="round" />
+  <path d="M62 141h68" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" />
+</svg>
